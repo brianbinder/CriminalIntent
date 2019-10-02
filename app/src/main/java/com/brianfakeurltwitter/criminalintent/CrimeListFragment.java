@@ -46,10 +46,7 @@ public class CrimeListFragment extends Fragment {
         private Crime mCrime;
 
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            this(inflater, parent, R.layout.list_item_crime);
-        }
-        public CrimeHolder(LayoutInflater inflater, ViewGroup parent, int layout) {
-            super(inflater.inflate(layout, parent, false));
+            super(inflater.inflate(R.layout.list_item_crime, parent, false));
             itemView.setOnClickListener(this);
 
             mTitleTextView = itemView.findViewById(R.id.crime_title);
@@ -69,17 +66,7 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class NoPoliceCrimeHolder extends CrimeHolder {
-        private int crime_layout = R.layout.list_item_crime;
-
-        public NoPoliceCrimeHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater, parent);
-        }
-    }
-
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
-        private int TYPE_NO_POLICE = 0;
-        private int TYPE_POLICE = 1;
         private int mHolderCount = 0;
         private List<Crime> mCrimes;
 
@@ -93,9 +80,6 @@ public class CrimeListFragment extends Fragment {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
             ++mHolderCount;
             Log.d("HOLDER_COUNT", mHolderCount + " holders and counting!!!!!!!!!!!!!!!!");
-            if (viewType == TYPE_POLICE) {
-                return new CrimeHolder(layoutInflater, parent, R.layout.list_item_police_crime);
-            }
             return new CrimeHolder(layoutInflater, parent);
         }
 
@@ -107,14 +91,6 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (mCrimes.get(position).isRequiresPolice()) {
-                return TYPE_POLICE;
-            }
-            return TYPE_NO_POLICE;
         }
 
     }
