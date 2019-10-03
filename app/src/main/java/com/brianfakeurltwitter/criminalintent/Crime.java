@@ -30,6 +30,10 @@ public class Crime {
         return mDate;
     }
 
+    public CharSequence getDatePretty() {
+        return android.text.format.DateFormat.format("E, LLL d, yyyy", mDate);
+    }
+
     public void setDate(Date date) {
         mDate = date;
     }
