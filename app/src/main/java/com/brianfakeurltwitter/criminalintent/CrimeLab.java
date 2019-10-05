@@ -3,13 +3,16 @@ package com.brianfakeurltwitter.criminalintent;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
+    private static final int sCapacity = 100;
 
     private List<Crime> mCrimes;
+    private HashMap<UUID, Crime> mCrimeMap = new HashMap<>(sCapacity);
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
@@ -19,10 +22,11 @@ public class CrimeLab {
 
     private CrimeLab(Context context) {
         mCrimes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < sCapacity; i++) {
             Crime crime = new Crime();
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0);
+            mCrimeMap.put(crime.getId(), crime);
             mCrimes.add(crime);
         }
     }
@@ -32,9 +36,6 @@ public class CrimeLab {
     }
 
     public Crime getCrime(UUID id) {
-        for (Crime crime : mCrimes) {
-            if (crime.getId().equals(id)) return crime;
-        }
-        return null;
+        return mCrimeMap.get(id);
     }
 }
