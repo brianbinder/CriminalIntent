@@ -13,6 +13,7 @@ public class CrimeLab {
 
     private List<Crime> mCrimes;
     private HashMap<UUID, Crime> mCrimeMap = new HashMap<>(sCapacity);
+    private HashMap<UUID, Integer> mCrimeIndex = new HashMap<>(sCapacity);
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
@@ -27,6 +28,7 @@ public class CrimeLab {
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0);
             mCrimeMap.put(crime.getId(), crime);
+            mCrimeIndex.put(crime.getId(), i);
             mCrimes.add(crime);
         }
     }
@@ -37,5 +39,9 @@ public class CrimeLab {
 
     public Crime getCrime(UUID id) {
         return mCrimeMap.get(id);
+    }
+
+    public int getCrimePosition(UUID id) {
+        return mCrimeIndex.get(id);
     }
 }
