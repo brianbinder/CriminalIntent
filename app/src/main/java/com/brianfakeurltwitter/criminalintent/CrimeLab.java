@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
-    private static final int sCapacity = 100;
+    public static final int sCapacity = 100;
 
     private List<Crime> mCrimes;
     private HashMap<UUID, Crime> mCrimeMap = new HashMap<>(sCapacity);

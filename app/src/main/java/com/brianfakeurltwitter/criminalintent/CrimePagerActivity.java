@@ -51,4 +51,8 @@ public class CrimePagerActivity extends AppCompatActivity {
         UUID crimeId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
         mViewPager.setCurrentItem(CrimeLab.get(this).getCrimePosition(crimeId));
     }
+
+    public void setCurrentCrime(int position) {
+        mViewPager.setCurrentItem(position);
+    }
 }

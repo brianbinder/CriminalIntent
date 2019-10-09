@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,8 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
+    private ImageButton mFirstCrimeButton;
+    private ImageButton mLastCrimeButton;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -79,6 +83,28 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(b);
             }
         });
+
+        int currentPosition = CrimeLab.get(getContext()).getCrimePosition(mCrime.getId());
+        Toast.makeText(getContext(), "Position: " + currentPosition, Toast.LENGTH_SHORT).show();
+
+        mFirstCrimeButton = v.findViewById(R.id.first_crime_button);
+        mFirstCrimeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimePagerActivity pager = (CrimePagerActivity) getContext();
+                pager.setCurrentCrime(0);
+            }
+        });
+        mFirstCrimeButton.setEnabled(CrimeLab.get(getContext()).getCrimePosition(mCrime.getId()) != 0);
+        mLastCrimeButton = v.findViewById(R.id.last_crime_button);
+        mLastCrimeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimePagerActivity pager = (CrimePagerActivity) getContext();
+                pager.setCurrentCrime(CrimeLab.sCapacity - 1);
+            }
+        });
+        mLastCrimeButton.setEnabled(CrimeLab.get(getContext()).getCrimePosition(mCrime.getId()) != CrimeLab.sCapacity - 1);
 
         return v;
     }
