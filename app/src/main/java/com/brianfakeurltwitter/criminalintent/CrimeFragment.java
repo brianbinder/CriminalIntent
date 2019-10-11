@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ import static android.widget.CompoundButton.*;
 
 public class CrimeFragment extends Fragment {
     private static final String ARG_CRIME_ID = "crime_id";
+    private static final String DIALOG_DATE = "DialogDate";
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -73,7 +75,14 @@ public class CrimeFragment extends Fragment {
 
         mDateButton = v.findViewById(R.id.crime_date);
         mDateButton.setText(mCrime.getDatePretty());
-        mDateButton.setEnabled(false);
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = new DatePickerFragment();
+                dialog.show(manager, DIALOG_DATE);
+            }
+        });
 
         mSolvedCheckBox = v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
@@ -83,9 +92,6 @@ public class CrimeFragment extends Fragment {
                 mCrime.setSolved(b);
             }
         });
-
-        int currentPosition = CrimeLab.get(getContext()).getCrimePosition(mCrime.getId());
-        Toast.makeText(getContext(), "Position: " + currentPosition, Toast.LENGTH_SHORT).show();
 
         mFirstCrimeButton = v.findViewById(R.id.first_crime_button);
         mFirstCrimeButton.setOnClickListener(new OnClickListener() {
