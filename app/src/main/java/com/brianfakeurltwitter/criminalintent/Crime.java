@@ -34,6 +34,10 @@ public class Crime {
         return android.text.format.DateFormat.format("E, LLL d, yyyy", mDate);
     }
 
+    public CharSequence getTimePretty() {
+        return android.text.format.DateFormat.format("hh:mm a", mDate);
+    }
+
     public void setDate(Date date) {
         mDate = date;
     }

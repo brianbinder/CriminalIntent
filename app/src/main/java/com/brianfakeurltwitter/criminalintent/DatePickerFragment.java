@@ -21,6 +21,7 @@ public class DatePickerFragment extends DialogFragment {
     public static final String EXTRA_DATE = "com.brianfakeurltwitter.criminalintent.date";
 
     private DatePicker mDatePicker;
+    private Calendar mInitialCalendar;
 
     public static DatePickerFragment newInstance(Date date) {
         Bundle args = new Bundle();
@@ -34,11 +35,11 @@ public class DatePickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstance) {
         Date date = (Date) getArguments().getSerializable(ARG_DATE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        mInitialCalendar = Calendar.getInstance();
+        mInitialCalendar.setTime(date);
+        int year = mInitialCalendar.get(Calendar.YEAR);
+        int month = mInitialCalendar.get(Calendar.MONTH);
+        int day = mInitialCalendar.get(Calendar.DAY_OF_MONTH);
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_date, null);
         mDatePicker = v.findViewById(R.id.dialog_date_picker);
         mDatePicker.init(year, month, day, null);
@@ -53,7 +54,13 @@ public class DatePickerFragment extends DialogFragment {
                                 int year = mDatePicker.getYear();
                                 int month = mDatePicker.getMonth();
                                 int day = mDatePicker.getDayOfMonth();
-                                Date date = new GregorianCalendar(year, month, day).getTime();
+                                Date date = new GregorianCalendar(
+                                        year,
+                                        month,
+                                        day,
+                                        mInitialCalendar.get(Calendar.HOUR_OF_DAY),
+                                        mInitialCalendar.get(Calendar.MINUTE)
+                                ).getTime();
                                 sendResult(Activity.RESULT_OK, date);
                             }
                         })
