@@ -9,11 +9,11 @@ import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
-    public static final int sCapacity = 100;
+    public static final int sCapacity = 3;
 
     private List<Crime> mCrimes;
-    private HashMap<UUID, Crime> mCrimeMap = new HashMap<>(sCapacity);
-    private HashMap<UUID, Integer> mCrimeIndex = new HashMap<>(sCapacity);
+    private HashMap<UUID, Crime> mCrimeMap = new HashMap<>(sCapacity + 100);
+    private HashMap<UUID, Integer> mCrimeIndex = new HashMap<>(sCapacity + 100);
     public static CrimeLab get(Context context) {
         if (sCrimeLab == null) {
             sCrimeLab = new CrimeLab(context);
@@ -27,10 +27,14 @@ public class CrimeLab {
             Crime crime = new Crime();
             crime.setTitle("Crime #" + i);
             crime.setSolved(i % 2 == 0);
-            mCrimeMap.put(crime.getId(), crime);
-            mCrimeIndex.put(crime.getId(), i);
-            mCrimes.add(crime);
+            addCrime(crime);
         }
+    }
+
+    public void addCrime(Crime crime) {
+        mCrimeMap.put(crime.getId(), crime);
+        mCrimeIndex.put(crime.getId(), mCrimes.size());
+        mCrimes.add(crime);
     }
 
     public List<Crime> getCrimes() {
