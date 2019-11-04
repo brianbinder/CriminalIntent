@@ -24,7 +24,7 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
-    private int mLastTouched = -1;
+//    private int mLastTouched = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,10 +98,13 @@ public class CrimeListFragment extends Fragment {
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
-        } else if (mLastTouched >= 0) {
-            mAdapter.notifyItemChanged(mLastTouched);
-            mLastTouched = -1;
+        } else {
+//        } else if (mLastTouched >= 0) {
+//            mAdapter.notifyItemChanged(mLastTouched);
+//            mLastTouched = -1;
+            mAdapter.notifyDataSetChanged();
         }
+        updateSubtitle();
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -133,7 +136,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            mLastTouched = mCurrentPosition;
+//            mLastTouched = mCurrentPosition;
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
