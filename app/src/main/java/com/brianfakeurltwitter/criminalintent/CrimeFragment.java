@@ -38,6 +38,7 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
     private ImageButton mFirstCrimeButton;
     private ImageButton mLastCrimeButton;
+    private ImageButton mDeleteCrimeButton;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -158,6 +159,16 @@ public class CrimeFragment extends Fragment {
             }
         });
         mLastCrimeButton.setEnabled(CrimeLab.get(getContext()).getCrimePosition(mCrime.getId()) != CrimeLab.sCapacity - 1);
+
+        mDeleteCrimeButton = v.findViewById(R.id.delete_crime);
+        mDeleteCrimeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimeLab lab = CrimeLab.get(getActivity());
+                lab.deleteCrime(mCrime.getId());
+                getActivity().finish();
+            }
+        });
 
         return v;
     }

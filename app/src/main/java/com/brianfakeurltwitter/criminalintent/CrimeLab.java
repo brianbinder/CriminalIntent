@@ -37,6 +37,20 @@ public class CrimeLab {
         mCrimes.add(crime);
     }
 
+    public void deleteCrime(UUID crime) {
+        int target = mCrimeIndex.get(crime);
+        mCrimes.remove(target);
+        mCrimeMap.remove(crime);
+        remapCrimes();
+    }
+
+    public void remapCrimes() {
+        mCrimeIndex = new HashMap<>(sCapacity + 100);
+        for (int i = 0; i < mCrimes.size(); i++) {
+            mCrimeIndex.put(mCrimes.get(i).getId(), i);
+        }
+    }
+
     public List<Crime> getCrimes() {
         return mCrimes;
     }
