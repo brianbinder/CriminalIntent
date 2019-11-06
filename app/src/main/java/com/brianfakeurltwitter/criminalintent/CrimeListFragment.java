@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
-//    private int mLastTouched = -1;
+    private Button mAddCrimeButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,10 +36,18 @@ public class CrimeListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mCrimeRecyclerView = view.findViewById(R.id.crime_recylcer_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAddCrimeButton = view.findViewById(R.id.add_crime_button);
+        mAddCrimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCrime();
+            }
+        });
 
         if (savedInstanceState != null) {
             mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE);
@@ -47,6 +56,10 @@ public class CrimeListFragment extends Fragment {
         updateUI();
 
         return view;
+    }
+
+    private boolean isEmpty() {
+        return CrimeLab.get(getActivity()).getCrimes().size() == 0;
     }
 
     @Override
@@ -78,10 +91,7 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_crime:
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
-                Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
-                startActivity(intent);
+                addCrime();
                 return true;
             case R.id.show_subtitle:
                 mSubtitleVisible = !mSubtitleVisible;
@@ -91,6 +101,13 @@ public class CrimeListFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void addCrime() {
+        Crime crime = new Crime();
+        CrimeLab.get(getActivity()).addCrime(crime);
+        Intent intent = CrimePagerActivity.newIntent(getActivity(), crime.getId());
+        startActivity(intent);
     }
 
     private void updateSubtitle() {
@@ -110,11 +127,10 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-//        } else if (mLastTouched >= 0) {
-//            mAdapter.notifyItemChanged(mLastTouched);
-//            mLastTouched = -1;
             mAdapter.notifyDataSetChanged();
         }
+        int emptyButtonVisibility = isEmpty() ? View.VISIBLE : View.INVISIBLE;
+        mAddCrimeButton.setVisibility(emptyButtonVisibility);
         updateSubtitle();
     }
 
@@ -124,7 +140,6 @@ public class CrimeListFragment extends Fragment {
         private TextView mTimeTextView;
         private ImageView mSolvedImageView;
         private Crime mCrime;
-        private int mCurrentPosition;
 
         public CrimeHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.list_item_crime, parent, false));
@@ -137,7 +152,6 @@ public class CrimeListFragment extends Fragment {
         }
 
         public void bind(Crime crime, int position) {
-            mCurrentPosition = position;
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
             mDateTextView.setText(mCrime.getDatePretty());
@@ -147,7 +161,6 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-//            mLastTouched = mCurrentPosition;
             Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
             startActivity(intent);
         }
